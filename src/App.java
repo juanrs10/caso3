@@ -1,15 +1,36 @@
 public class App {
     public static void main(String[] args) {
-        // Scenario 1: Single iterative client making 32 requests
-        System.out.println("Running Scenario 1: Single iterative client with 32 requests");
-        runSingleClientScenario();
 
-        // Scenario 2: Concurrent clients with varying numbers of delegates
-        int[] delegateCounts = {4, 8, 32};  // Number of concurrent clients
-        for (int count : delegateCounts) {
-            System.out.println("Running Scenario 2 with " + count + " concurrent clients.");
-            runConcurrentClientScenario(count);
+        //------Implementación caso base----
+
+        /// Inicializar el servidor
+        ServerMain server = new ServerMain();
+
+        server.initializeMenu();
+
+        // Esperar unos momentos para que el servidor esté listo, si es necesario
+        try {
+            Thread.sleep(1000); // Ajusta el tiempo según lo necesario
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        // Inicializar el cliente
+        ClientMain client = new ClientMain();
+        client.sendRequest("cliente1", "paquete123");// Cliente calcula R = C(K_w+, Reto) (k_w+ es la llave publica del servidor) y envía R al servidor
+
+        
+        //------Implementación escenarios-----
+
+        // // Scenario 1: Single iterative client making 32 requests
+        // System.out.println("Running Scenario 1: Single iterative client with 32 requests");
+        // runSingleClientScenario();
+
+        // // Scenario 2: Concurrent clients with varying numbers of delegates
+        // int[] delegateCounts = {4, 8, 32};  // Number of concurrent clients
+        // for (int count : delegateCounts) {
+        //     System.out.println("Running Scenario 2 with " + count + " concurrent clients.");
+        //     runConcurrentClientScenario(count);
+        // }
     }
 
     // Runs the first scenario: a single client sending multiple requests iteratively

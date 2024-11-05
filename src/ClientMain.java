@@ -179,11 +179,14 @@ public class ClientMain {
 
             if (isCypheredEstadoValid && isHmacValid) {
                 out.writeObject("TERMINAR");
-                //System.out.println("cypheredEstado y HMAC verificados correctamente.");
+                System.out.println("cypheredEstado y HMAC verificados correctamente.");
+                System.out.println("El protocolo finalizó correctamente con el estado: Terminar");
             } else {
                 out.writeObject("ERROR");
                 System.out.println("Verificación fallida para cypheredEstado o HMAC.");
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

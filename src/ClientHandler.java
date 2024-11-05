@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable {
             // Step 1: Receive and decrypt the challenge
             byte[] encryptedChallenge = (byte[]) in.readObject();
             String decryptedChallenge = decryptDataRSA(encryptedChallenge);
-            //System.out.println("Challenge decrypted: " + decryptedChallenge);
+            System.out.println("Challenge decrypted: " + decryptedChallenge);
 
             // Step 2: Send decrypted challenge as response
             out.writeObject(decryptedChallenge);
@@ -94,9 +94,9 @@ public class ClientHandler implements Runnable {
             // Step 5: Receive OK/ERROR from client for DH parameters verification
             long verificationStart = System.currentTimeMillis();
             String dhStatus = (String) in.readObject();
-            //System.out.println("status: "+ dhStatus);
+            System.out.println("status: "+ dhStatus);
             if (!"OK".equals(dhStatus)) {
-                //System.out.println("Client failed to verify Diffie-Hellman parameters.");
+                System.out.println("Client failed to verify Diffie-Hellman parameters.");
                 return;
             }
 
@@ -122,7 +122,7 @@ public class ClientHandler implements Runnable {
             new SecureRandom().nextBytes(ivBytes); // Generate random IV
             out.writeObject(ivBytes);
             IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
-            //System.out.println("IV sent and encryption initialized.");
+            System.out.println("IV sent and encryption initialized.");
             
             //El servidor verifica C(K_AB1, userId), HMAC(K_AB2, userId), C(K_AB1, packageId), HMAC(K_AB2, packageId) enviados por el cliente
 
@@ -141,12 +141,12 @@ public class ClientHandler implements Runnable {
             aesCipher.init(Cipher.DECRYPT_MODE, K_AB1, ivSpec);
             byte[] decryptedUserIdBytes = aesCipher.doFinal(encryptedUserId);
             String decryptedUserId = new String(decryptedUserIdBytes, StandardCharsets.UTF_8);
-            //System.out.println("Decrypted userId: " + decryptedUserId);
+            System.out.println("Decrypted userId: " + decryptedUserId);
 
             // Decrypt packageId with K_AB1
             byte[] decryptedPackageIdBytes = aesCipher.doFinal(encryptedPackageId);
             String decryptedPackageId = new String(decryptedPackageIdBytes, StandardCharsets.UTF_8);
-            //System.out.println("Decrypted packageId: " + decryptedPackageId);
+            System.out.println("Decrypted packageId: " + decryptedPackageId);
 
             // Verify HMAC for userId
             Mac hmac = Mac.getInstance("HmacSHA384");
@@ -161,10 +161,10 @@ public class ClientHandler implements Runnable {
             // Send verification result to client
             String estado = "OK";
             if (isUserIdValid && isPackageIdValid) {
-                //System.out.println("Verification successful: userId and packageId are valid.");
+                System.out.println("Verification successful: userId and packageId are valid.");
             } else {
                 estado = "ERROR";
-                //System.out.println("Verification failed: Invalid HMAC for userId or packageId.");
+                System.out.println("Verification failed: Invalid HMAC for userId or packageId.");
             }
 
             //C(K_AB1, estado)
@@ -177,8 +177,7 @@ public class ClientHandler implements Runnable {
             byte[] hmacEstado = hmac.doFinal(estado.getBytes(StandardCharsets.UTF_8));
             out.writeObject(hmacEstado);
             long verificationEnd = System.currentTimeMillis();
-            System.out.println("Time to verify request: " + (verificationEnd - verificationStart) + " ms");
-    
+            System.out.println("Time to verify request: " + (verificationEnd - verificationStart) + " ms"); 
 
         } catch (Exception e) {
         e.printStackTrace();
